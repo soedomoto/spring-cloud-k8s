@@ -1,0 +1,8 @@
+apiVersion: skaffold/v1beta15
+kind: Config
+metadata:
+  name: postgres-server
+deploy:
+  kubectl:
+    manifests:
+      - 'deployment.yaml'

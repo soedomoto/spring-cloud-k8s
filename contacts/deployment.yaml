@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: contacts-service
+  labels:
+    run: contacts
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    run: contacts
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contacts
+  labels:
+    run: contacts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: contacts
+  template:
+    metadata:
+      labels:
+        run: contacts
+    spec:
+      containers:
+        - name: contacts
+          image: soedomoto/contacts:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: EUREKA_URL
+              value: "http://eureka:admin@eureka-server:8761/eureka"
+            - name: DATABASE_URL
+              value: "jdbc:postgresql://database:5432/contacts?user=postgres&password=contacts"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker"

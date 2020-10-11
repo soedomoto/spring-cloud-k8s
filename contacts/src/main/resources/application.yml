@@ -1,0 +1,58 @@
+spring:
+  profiles.active: default
+  application:
+    name: contacts-service
+
+server:
+  compression.enabled: true
+  port: 8080
+
+spring.jpa:
+  show-sql: true
+  hibernate:
+    ddl-auto: update
+
+params:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    maximumPoolSize: 2
+    poolName: hikari_contacts_pool
+
+eureka:
+  client:
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://eureka:admin@127.0.0.1:8761/eureka/
+  instance:
+    metadataMap:
+      instanceId: ${spring.application.name}:${random.int}
+    preferIpAddress: false
+
+---
+spring:
+  profiles: default
+
+params:
+  datasource:
+    jdbcUrl: jdbc:postgresql://127.0.0.1:5432/contacts
+
+---
+spring:
+  profiles: docker
+
+params:
+  datasource:
+    jdbcUrl: ${DATABASE_URL}
+
+security.basic.enabled: false
+management.security.enabled: false
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL}
+  instance:
+    instanceId: ${spring.application.name}:${random.value}
+    preferIpAddress: true

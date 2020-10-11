@@ -1,0 +1,13 @@
+apiVersion: skaffold/v1beta15
+kind: Config
+metadata:
+  name: eureka-server
+build:
+  artifacts:
+    - image: soedomoto/hystrix
+      context: ./
+      jib: { }
+deploy:
+  kubectl:
+    manifests:
+      - 'deployment.yaml'
